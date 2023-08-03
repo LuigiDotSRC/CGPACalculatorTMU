@@ -69,6 +69,7 @@ def calculations():
     getCGPA()
 
 def getCGPA():
+    global savetxt
     savetxt = ""
     textbox.delete("1.0", tk.END)
     totalgradepoint = 0
@@ -80,18 +81,50 @@ def getCGPA():
         totalgradepoint += i.getGradePoint()
         totalWeight += i.getWeight()
 
-    culmGPA.set("CGPA: " + str(totalgradepoint/totalWeight))
+    culmGPA.set("CGPA: " + str(round(totalgradepoint/totalWeight,4)))
     
 def exportToTXT():
-
-    calculations()
-
+    global savetxt
     print(savetxt)
     file = open("cgpasavefile.txt", "w")
+    file.write("")
     file.write(savetxt)
+    file.close()
+    #exportbutton.config(state = "disabled")
+
+def importToTXT():
+    # functions: 
+    # - add GPAs to current culminating GPA 
+    # - display the imported entries on the textbox 
+    # - button should be disabled after first use
+    sectionNum = 0
+    totalGPAs = 0
+    GPAresult = ""
+    weightResult = ""
+    file = open("cgpasavefile.txt", "r")
+    for line in file:
+        for char in line:
+            if char == "|":
+                sectionNum += 1 
+
+            if sectionNum == 1:
+                GPAresult += char 
+
+            if sectionNum == 2:
+                weightResult = char 
+        
+        totalGPAs += float(GPAresult[15:])
+        print(weightResult)
+        GPAresult = ""
+        weightResult = ""
+        sectionNum = 0
+        
+    
+                
     file.close()
 
 # window 
+savetxt = ""
 window = ttk.Window(themename = "darkly")
 window.title("CGPA Calculator")
 window.geometry("500x450")
@@ -104,7 +137,6 @@ courseWeight = tk.StringVar()
 courseCode = tk.StringVar()
 outputText = tk.StringVar()
 grades = []
-savetxt = ""
 
 # title
 title = ttk.Label(
@@ -193,17 +225,18 @@ frame2.pack()
 # import button
 importbutton = ttk.Button(
     master = frame2,
-    text = "Import from .txt"
+    text = "Import from .txt",
+    command = importToTXT
 )
 importbutton.grid(column = 1, row = 1, padx = 10)
 
 # export button
-importbutton = ttk.Button(
+exportbutton = ttk.Button(
     master = frame2,
     text = "Export to .txt",
     command = exportToTXT
 )
-importbutton.grid(column = 2, row = 1, padx = 10)
+exportbutton.grid(column = 2, row = 1, padx = 10)
 
 # run
 window.mainloop()

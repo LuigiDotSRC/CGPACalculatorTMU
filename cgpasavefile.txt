@@ -1,0 +1,3 @@
+Course Code: CPS209: A+ | Grade Point: 4.33 | Weight: 1
+Course Code: CPS109: B- | Grade Point: 2.67 | Weight: 1
+Course Code: ECN210: F | Grade Point: 0.0 | Weight: 1
